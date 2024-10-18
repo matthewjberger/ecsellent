@@ -21,48 +21,42 @@ world! {
 }
 
 system!(
-    (World, Resources) {
-        pub fn example_system(
-            for entity in world,
-            read [ _spawned: Spawned => spawned ],
-            write [ ],
-            resources [ ],
-            input [ ],
-            output [ entities = () ],
-        ) -> () {
-            println!("Hello, world! Entity {entity} is spawned!");
-        }
+    pub fn example_system<World, Resources>(
+        for entity in world,
+        read [ _spawned: Spawned => spawned ],
+        write [ ],
+        resources [ ],
+        input [ ],
+        output [ entities = () ],
+    ) -> () {
+        println!("Hello, world! Entity {entity} is spawned!");
     }
 );
 
 system!(
-    (World, Resources) {
-        pub fn query_spawned_entities(
-            for entity in world,
-            read [ _spawned: Spawned => spawned],
-            write [ ],
-            resources [ ],
-            input [ ],
-            output [ entities = Vec::new() ],
-        ) -> Vec<Entity> {
+    pub fn query_spawned_entities<World, Resources>(
+        for entity in world,
+        read [ _spawned: Spawned => spawned],
+        write [ ],
+        resources [ ],
+        input [ ],
+        output [ entities = Vec::new() ],
+    ) -> Vec<Entity> {
+        entities.push(entity);
+    }
+);
+
+system!(
+    pub fn query_despawned_entities<World, Resources>(
+        for entity in world,
+        read [ ],
+        write [ ],
+        resources [ ],
+        input [ ],
+        output [ entities = Vec::new() ],
+    ) -> Vec<Entity> {
+        if !has_component!(world, spawned, entity) {
             entities.push(entity);
-        }
-    }
-);
-
-system!(
-    (World, Resources) {
-        pub fn query_despawned_entities(
-            for entity in world,
-            read [ ],
-            write [ ],
-            resources [ ],
-            input [ ],
-            output [ entities = Vec::new() ],
-        ) -> Vec<Entity> {
-            if !has_component!(world, spawned, entity) {
-                entities.push(entity);
-            }
         }
     }
 );

@@ -38,16 +38,14 @@ macro_rules! world {
 #[macro_export]
 macro_rules! system {
     (
-        ($world_type:ident, $world_resources_type:ident) {
-            pub fn $name:ident(
-                for $entity:ident in $world:ident,
-                read [ $($immut_name:ident : $immut_type:ty => $immut_stream:ident),* $(,)? ],
-                write [ $($mut_name:ident : $mut_type:ty => $mut_stream:ident),* $(,)? ],
-                resources [ $($res_name:ident),* $(,)? ],
-                input [ $($input_name:ident : $input_type:ty),* $(,)? ],
-                output [ $output:ident = $initial_value:expr ],
-            ) -> $return_type:ty $body:block
-        }
+        pub fn $name:ident<$world_type:ident, $world_resources_type:ident>(
+            for $entity:ident in $world:ident,
+            read [ $($immut_name:ident : $immut_type:ty => $immut_stream:ident),* $(,)? ],
+            write [ $($mut_name:ident : $mut_type:ty => $mut_stream:ident),* $(,)? ],
+            resources [ $($res_name:ident),* $(,)? ],
+            input [ $($input_name:ident : $input_type:ty),* $(,)? ],
+            output [ $output:ident = $initial_value:expr ],
+        ) -> $return_type:ty $body:block
     ) => {
         pub fn $name(
             $world: &mut $world_type,
