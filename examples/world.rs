@@ -93,18 +93,18 @@ pub fn despawn_entities_command(world: &mut World, entities: &[Entity]) {
         if let Some(spawned) = world.spawned.get_mut(*entity) {
             *spawned = None;
         }
-        query_descendents(world, *entity)
+        query_descendants(world, *entity)
             .into_iter()
-            .for_each(|descendent| {
+            .for_each(|descendant| {
                 if let Some(spawned) = world.spawned.get_mut(*entity) {
                     *spawned = None;
                 }
-                world.spawned[descendent] = None;
+                world.spawned[descendant] = None;
             });
     });
 }
 
-pub fn query_descendents(world: &mut World, parent: Entity) -> Vec<Entity> {
+pub fn query_descendants(world: &mut World, parent: Entity) -> Vec<Entity> {
     let mut entities = Vec::new();
     query_spawned_entities(world).iter().for_each(|entity| {
         let World {
@@ -118,7 +118,7 @@ pub fn query_descendents(world: &mut World, parent: Entity) -> Vec<Entity> {
             return;
         }
         entities.push(*entity);
-        entities.extend(&query_descendents(world, *entity));
+        entities.extend(&query_descendants(world, *entity));
     });
     entities
 }
