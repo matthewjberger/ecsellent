@@ -26,16 +26,16 @@ system!(
             for entity in world,
             read [ ],
             write [ ],
-            resources [ delta_time ],
+            resources [ ],
             input [ ],
-            output [ ],
-        ) {
-            println!("Hello, world! Entity {entity} is spawned with delta time {delta_time}!");
+            output [ entities = () ],
+        ) -> () {
+            println!("Hello, world! Entity {entity} is spawned!");
         }
     }
 );
 
-query!(
+system!(
     (World, Resources) {
         pub fn query_spawned(
             for entity in world,
@@ -50,7 +50,7 @@ query!(
     }
 );
 
-query!(
+system!(
     (World, Resources) {
         pub fn query_despawned(
             for entity in world,

@@ -1,5 +1,5 @@
 pub mod prelude {
-    pub use crate::{has_component, query, system, world, Entity, Stream};
+    pub use crate::{has_component, system, world, Entity, Stream};
 }
 
 pub type Entity = usize;
@@ -37,53 +37,6 @@ macro_rules! world {
 
 #[macro_export]
 macro_rules! system {
-    (
-        ($world_type:ident, $world_resources_type:ident) {
-            pub fn $name:ident(
-                for $entity:ident in $world:ident,
-                read [ $($immut_name:ident : $immut_type:ty => $immut_stream:ident),* $(,)? ],
-                write [ $($mut_name:ident : $mut_type:ty => $mut_stream:ident),* $(,)? ],
-                resources [ $($res_name:ident),* $(,)? ],
-                input [ $($input_name:ident : $input_type:ty),* $(,)? ],
-                output [ $($output_name:ident = $output_value:expr),* $(,)? ],
-            ) $body:block
-        }
-    ) => {
-        pub fn $name(
-            $world: &mut $world_type,
-        ) {
-            $(let mut $output_name = $output_value;)*
-            let $world_type {
-                last_entity,
-                $($immut_stream,)*
-                $($mut_stream,)*
-                resources: $world_resources_type {
-                    $($res_name,)*
-                    ..
-                },
-                ..
-            } = $world;
-            (0..*last_entity)
-                .into_iter()
-                .for_each(|$entity| {
-                $(
-                    let Some(Some($immut_name)) = $immut_stream.get($entity) else {
-                        return;
-                    };
-                )*
-                $(
-                    let Some(Some($mut_name)) = $mut_stream.get_mut($entity) else {
-                        return;
-                    };
-                )*
-                $body
-            });
-        }
-    };
-}
-
-#[macro_export]
-macro_rules! query {
     (
         ($world_type:ident, $world_resources_type:ident) {
             pub fn $name:ident(
