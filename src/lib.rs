@@ -89,6 +89,7 @@ macro_rules! query {
             pub fn $name:ident(
                 for $entity:ident in $world:ident,
                 read [ $($immut_name:ident : $immut_type:ty => $immut_stream:ident),* $(,)? ],
+                write [ $($mut_name:ident : $mut_type:ty => $mut_stream:ident),* $(,)? ],
                 resources [ $($res_name:ident),* $(,)? ],
                 input [ $($input_name:ident : $input_type:ty),* $(,)? ],
                 output [ $output:ident = $initial_value:expr ],
@@ -114,6 +115,11 @@ macro_rules! query {
                 .for_each(|$entity| {
                     $(
                         let Some(Some($immut_name)) = $immut_stream.get($entity) else {
+                            return;
+                        };
+                    )*
+                    $(
+                        let Some(Some($mut_name)) = $mut_stream.get_mut($entity) else {
                             return;
                         };
                     )*

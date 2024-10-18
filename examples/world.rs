@@ -40,6 +40,7 @@ query!(
         pub fn query_spawned(
             for entity in world,
             read [ _spawned: Spawned => spawned],
+            write [ ],
             resources [ ],
             input [ ],
             output [ entities = Vec::new() ],
@@ -53,7 +54,8 @@ query!(
     (World, Resources) {
         pub fn query_despawned(
             for entity in world,
-            read [],
+            read [ ],
+            write [ ],
             resources [ ],
             input [ ],
             output [ entities = Vec::new() ],
